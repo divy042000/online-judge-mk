@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {generateFile} = require('../utils/generateFile');
-const {executeCpp} = require('../utils/executeCpp');
+const {executeCpp, executePython} = require('../utils/executeCpp');
 
 const ProblemsSchema = require("../models/ProblemsSchema");
 
@@ -47,14 +47,21 @@ router.post('/get_prob_by_id', async(req, res) => {
 })
 
 router.post('/run', async (req, res) => {
-    const { lang, code} = req.body;
+    const { lang, code, user_input} = req.body;
     console.log(code);
     if(code === undefined){
         return res.json({message: "Empty code body"});
     }
     try {
         const filePath = await generateFile(lang, code);
-    const output = await executeCpp(filePath);
+        var output;
+        if(lang == 'cpp'){
+            output = await executeCpp(filePath, user_input);
+        }
+        if(lang == 'python'){
+            output = await executePython(filePath, user_input);
+        }
+    
     return res.json({filePath, output});
 
     } catch(err){

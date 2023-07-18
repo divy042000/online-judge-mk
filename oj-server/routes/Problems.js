@@ -20,6 +20,25 @@ router.post('/addprob', async (req, res) => {
     }
 })
 
+router.post('/add-testcases', async(req, res) => {
+    try {
+        const {probid, input, expectedOutput} = req.body;
+        console.log("yess")
+        const problem = await ProblemsSchema.findById(probid);
+
+        if(!problem){
+            return res.json({message: "Problem not found"})
+        }
+
+        problem.testCases.push({input, expectedOutput});
+        await problem.save();
+
+        return res.json({message: problem})
+    } catch(err){
+        return res.json({message: err});
+    }
+})
+
 router.get('/all', async(req, res) => {
     try {
         const problems = await ProblemsSchema.find();
@@ -47,22 +66,38 @@ router.post('/get_prob_by_id', async(req, res) => {
 })
 
 router.post('/run', async (req, res) => {
-    const { lang, code, user_input} = req.body;
+    const { lang, code, user_input, probid} = req.body;
     console.log(code);
+    const problem = await ProblemsSchema.findById(probid);
     if(code === undefined){
         return res.json({message: "Empty code body"});
     }
+
     try {
         const filePath = await generateFile(lang, code);
         var output;
-        if(lang == 'cpp'){
-            output = await executeCpp(filePath, user_input);
+        const results = [];
+        for(const testcase of problem.testCases){
+            const {input, expectedOutput} = testcase;
+            try {
+                if(lang == 'cpp'){
+                    output = await executeCpp(filePath,input);
+                }
+                if(lang == 'python'){
+                    output = await executePython(filePath, input);
+                }
+                const isCorrect = output.trim() === expectedOutput.trim();
+                results.push({input, expectedOutput, output, isCorrect});
+
+            } catch(err){
+                console.log(err);
+                results.push({input, expectedOutput, output: 'Error', isCorrect: false});
+            }
+            
         }
-        if(lang == 'python'){
-            output = await executePython(filePath, user_input);
-        }
+        console.log(results);
     
-    return res.json({filePath, output});
+    return res.json({filePath, output, results});
 
     } catch(err){
         return res.json({message: err.message})

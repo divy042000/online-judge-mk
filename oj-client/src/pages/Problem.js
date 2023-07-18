@@ -10,14 +10,17 @@ import CodeMirror from "@uiw/react-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
+import { ThreeCircles } from "react-loader-spinner";
 
 export default function Problem() {
   const [problem, setProblem] = useState([]);
   const [codeLang, setCodeLang] = useState("");
   var [code, setcode] = useState("");
   const [outputCode, setOutputCode] = useState("");
+  const [outputVerdict, setOutputVerdict] = useState(false);
   const [userInput, setUserInput] = useState("");
   const outputRef = useRef(null);
+  const [loading, setIsLoading] = useState(false);
   // console.log(code);
   const { id } = useParams();
   var valext = [cpp()];
@@ -40,11 +43,13 @@ export default function Problem() {
   const probIndex = String(id);
 
   const handleSubmit = () => {
+    setIsLoading(true);
     console.log("Yess", code);
     const payload = {
       lang: codeLang,
       code,
       user_input: userInput,
+      probid: probIndex
     };
     console.log(payload);
 
@@ -52,15 +57,20 @@ export default function Problem() {
       run_compiler(payload).then((data) => {
         console.log(data);
         setOutputCode(data.output);
+        console.log(data.results);
+        console.log(data.results[0].isCorrect);
+        setOutputVerdict(data.results[0].isCorrect);
       });
+
+      // setIsLoading(false);
       // outputRef.current.scrollIntoView({behaviour: 'smooth'});
     } catch (err) {
       console.log(err);
     }
-
-    
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
-
 
   //   if(codeLang === 'cpp'){
   //     valext=[cpp()];
@@ -79,91 +89,132 @@ export default function Problem() {
   return (
     <>
       <Navbar />
-      {problem
-        .filter((prob) => prob._id === probIndex)
-        .map((temp) => (
-          <>
-            <div className="grid grid-rows-2 text-gold md:grid-cols-2">
-              <div className="bg-gray-700 rounded m-3 p-2">
-                <h1 className="text-3xl m-3 uppercase font-semibold">
-                  Problem:{" "}
-                  <span className="text-white capitalize">{temp.name}</span>
-                </h1>
-                <br></br>
-                <h3 className="text-2xl m-3 uppercase font-semibold">
-                  Description: <br></br>
-                  <span className="text-white normal-case font-medium">
-                    {temp.statement}
-                  </span>
-                </h3>
-                <br></br>
-                <h3 className="text-2xl m-3 uppercase font-semibold">
-                  Difficulty:{" "}
-                  <span className="text-white normal-case font-medium">
-                    {temp.difficulty}
-                  </span>
-                </h3>
-              </div>
-              <div className="bg-gray-700 rounded m-3 p-2">
-                <div className="flex flex-row">
-                  <select
-                    className="text-xl w-[40%] p-2 bg-gray-800 outline-none rounded-lg m-3"
-                    value={codeLang}
-                    onChange={(e) => {
-                      setCodeLang(e.target.value);
-                    }}
-                  >
-                    <option value="cpp">C++</option>
-                    <option value="python">Python</option>
-                    {/* <option value="java">Java</option> */}
-                  </select>
-                </div>
-
-                <CodeMirror
-                  className="m-3 text-lg rounded-lg"
-                  value={code}
-                  onChange={(value) => setcode(value)}
-                  theme="dark"
-                  height="400px"
-                  extensions={valext}
-                />
-                <h1 className="text-3xl m-3 uppercase font-semibold">Input:</h1>
-                <div>
-                  <textarea
-                    value={userInput}
-                    className="bg-gray-600 m-3 p-2 outline-none text-xl rounded-lg"
-                    onChange={(e) => setUserInput(e.target.value)}
-                    rows={4}
-                    cols={50}
-                    placeholder="Type your input here..."
-                  />
-                </div>
-                <div>
-                  <button
-                    onClick={() => {handleSubmit()}}
-                    className="m-3 p-2 bg-gray-600 rounded-lg font-semibold hover:bg-gray-500 text-xl"
-                  >
-                    Submit
-                  </button>
-                </div>
-
-                {/* <div ref={outputRef}> */}
-                {outputCode && (
-                  <>
+      {loading ? (
+        <>
+          <div className="h-screen flex items-center justify-center">
+            <ThreeCircles
+              height="100"
+              width="100"
+              color="#FFD700"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="three-circles-rotating"
+              outerCircleColor=""
+              innerCircleColor=""
+              middleCircleColor=""
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          {problem
+            .filter((prob) => prob._id === probIndex)
+            .map((temp) => (
+              <>
+                <div className="grid grid-rows-2 text-gold md:grid-cols-2">
+                  <div className="bg-gray-700 rounded m-3 p-2">
                     <h1 className="text-3xl m-3 uppercase font-semibold">
-                      Output:
+                      Problem:{" "}
+                      <span className="text-white capitalize">{temp.name}</span>
                     </h1>
-                    <div className="m-3 p-2 bg-gray-600 rounded-lg">
-                      <h3 className="text-xl font-monocode">{outputCode}</h3>
+                    <br></br>
+                    <h3 className="text-2xl m-3 uppercase font-semibold">
+                      Description: <br></br>
+                      <span className="text-white normal-case font-medium">
+                        {temp.statement}
+                      </span>
+                    </h3>
+                    <br></br>
+                    <h3 className="text-2xl m-3 uppercase font-semibold">
+                      Difficulty:{" "}
+                      <span className="text-white normal-case font-medium">
+                        {temp.difficulty}
+                      </span>
+                    </h3>
+                    <h3 className="text-2xl m-3 uppercase font-semibold">
+                      Sample Input:{" "}
+                      <span className="text-white normal-case font-medium">
+                        {temp.testCases[0].input}
+                      </span>
+                    </h3>
+                    
+                  </div>
+                  <div className="bg-gray-700 rounded m-3 p-2">
+                    <div className="flex flex-row">
+                      <select
+                        className="text-xl w-[40%] p-2 bg-gray-800 outline-none rounded-lg m-3"
+                        value={codeLang}
+                        onChange={(e) => {
+                          setCodeLang(e.target.value);
+                        }}
+                      >
+                        <option value="cpp">C++</option>
+                        <option value="python">Python</option>
+                        {/* <option value="java">Java</option> */}
+                      </select>
                     </div>
-                  </>
-                )}
-                {/* </div> */}
-               
-              </div>
-            </div>
-          </>
-        ))}
+
+                    <CodeMirror
+                      className="m-3 text-lg rounded-lg"
+                      value={code}
+                      onChange={(value) => setcode(value)}
+                      theme="dark"
+                      height="400px"
+                      extensions={valext}
+                    />
+                    <h1 className="text-3xl m-3 uppercase font-semibold">
+                      Input:
+                    </h1>
+                    <div>
+                      <textarea
+                        value={userInput}
+                        className="bg-gray-600 m-3 p-2 outline-none text-xl rounded-lg"
+                        onChange={(e) => setUserInput(e.target.value)}
+                        rows={4}
+                        cols={50}
+                        placeholder="Type your input here..."
+                      />
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => {
+                          handleSubmit();
+                        }}
+                        className="m-3 p-2 bg-gray-600 rounded-lg font-semibold hover:bg-gray-500 text-xl"
+                      >
+                        Submit
+                      </button>
+                    </div>
+
+                    {/* <div ref={outputRef}> */}
+                    {outputCode && (
+                      <>
+                        <h1 className="text-3xl m-3 uppercase font-semibold">
+                          Output:
+                        </h1>
+                        <div className="m-3 p-2 bg-gray-600 rounded-lg">
+                          <h3 className="text-xl font-monocode">
+                            {outputCode}
+                          </h3>
+                        </div>
+                        <h1 className="text-3xl m-3 uppercase font-semibold">
+                          Verdict:
+                        </h1>
+                        <div className="m-3 p-2 bg-gray-600 rounded-lg">
+                          <h3 className="text-xl font-monocode">
+                            {outputVerdict ? <>True</>: <>False</>}
+                          </h3>
+                        </div>
+                      </>
+                    )}
+                    {/* </div> */}
+                  </div>
+                </div>
+              </>
+            ))}
+        </>
+      )}
     </>
   );
 }

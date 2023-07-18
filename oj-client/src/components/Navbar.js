@@ -73,7 +73,7 @@ export default function Navbar(){
                                 <Link to="/about">About Us</Link>
                             </li>
                             <li className="text-gold hover:text-indigo-200 font-medium">
-                                <Link to="/about">Login/Signup</Link>
+                                <Link to="/login">Login/Signup</Link>
                             </li>
                         </ul>
                     </div>

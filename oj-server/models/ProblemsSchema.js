@@ -1,6 +1,19 @@
 const express = require('express');
 const { default: mongoose } = require('mongoose');
 
+
+const TestCasesSchema = new mongoose.Schema(
+    {
+        input:{
+            type: String,
+        },
+        expectedOutput:{
+            type: String,
+        }
+        
+    }
+)
+
 const Problems = new mongoose.Schema(
     {
         statement:{
@@ -16,6 +29,7 @@ const Problems = new mongoose.Schema(
             type: String,
             enum: ['Easy', 'Medium', 'Hard']
         },
+        testCases: [TestCasesSchema]
         
     }
 )

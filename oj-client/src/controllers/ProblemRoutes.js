@@ -35,3 +35,15 @@ export const run_compiler = async(obj) => {
     const ans = await res.json();
     return ans;
 }
+
+export const submit_compiler = async(obj) => {
+    const res = await fetch(`${base}/problems/submit`, {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+            "Content-Type" : "application/json",
+        },
+    });
+    const ans = await res.json();
+    return ans;
+}

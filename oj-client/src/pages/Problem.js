@@ -4,6 +4,7 @@ import {
   get_all_problems,
   get_problem_by_id,
   run_compiler,
+  submit_compiler
 } from "../controllers/ProblemRoutes";
 import Navbar from "../components/Navbar";
 import CodeMirror from "@uiw/react-codemirror";
@@ -42,19 +43,45 @@ export default function Problem() {
 
   const probIndex = String(id);
 
+  const handleRun = () => {
+    // setIsLoading(true);
+    console.log("Yess", code);
+    const payload = {
+      lang: codeLang,
+      code,
+      user_input: userInput
+    };
+    console.log(payload);
+
+    try {
+      run_compiler(payload).then((data) => {
+        console.log(data);
+        setOutputCode(data.output);
+        // setOutputVerdict(false);
+      });
+
+      // setIsLoading(false);
+      // outputRef.current.scrollIntoView({behaviour: 'smooth'});
+    } catch (err) {
+      console.log(err);
+    }
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 2000);
+  };
+
   const handleSubmit = () => {
     setIsLoading(true);
     console.log("Yess", code);
     const payload = {
       lang: codeLang,
       code,
-      user_input: userInput,
       probid: probIndex
     };
     console.log(payload);
 
     try {
-      run_compiler(payload).then((data) => {
+      submit_compiler(payload).then((data) => {
         console.log(data);
         setOutputCode(data.output);
         console.log(data.results);
@@ -176,7 +203,15 @@ export default function Problem() {
                         placeholder="Type your input here..."
                       />
                     </div>
-                    <div>
+                    <div className="">
+                      <button
+                        onClick={() => {
+                          handleRun();
+                        }}
+                        className="m-3 p-2 bg-gray-600 rounded-lg font-semibold hover:bg-gray-500 text-xl"
+                      >
+                        Run
+                      </button>
                       <button
                         onClick={() => {
                           handleSubmit();
@@ -198,14 +233,23 @@ export default function Problem() {
                             {outputCode}
                           </h3>
                         </div>
-                        <h1 className="text-3xl m-3 uppercase font-semibold">
+                        {outputVerdict ? <>
+                          <h1 className="text-3xl m-3 uppercase font-semibold">
                           Verdict:
                         </h1>
                         <div className="m-3 p-2 bg-gray-600 rounded-lg">
                           <h3 className="text-xl font-monocode">
-                            {outputVerdict ? <>True</>: <>False</>}
+                            Accepted
                           </h3>
-                        </div>
+                        </div></>: <><h1 className="text-3xl m-3 uppercase font-semibold">
+                          Verdict:
+                        </h1>
+                        <div className="m-3 p-2 bg-gray-600 rounded-lg">
+                          <h3 className="text-xl font-monocode">
+                            Wrong Answer
+                          </h3>
+                        </div></>}
+                       
                       </>
                     )}
                     {/* </div> */}

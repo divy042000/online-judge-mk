@@ -65,8 +65,8 @@ router.post('/get_prob_by_id', async(req, res) => {
     }
 })
 
-router.post('/run', async (req, res) => {
-    const { lang, code, user_input, probid} = req.body;
+router.post('/submit', async(req, res) => {
+    const { lang, code, probid} = req.body;
     console.log(code);
     const problem = await ProblemsSchema.findById(probid);
     if(code === undefined){
@@ -98,6 +98,29 @@ router.post('/run', async (req, res) => {
         console.log(results);
     
     return res.json({filePath, output, results});
+
+    } catch(err){
+        return res.json({message: err.message})
+    }
+})
+router.post('/run', async (req, res) => {
+    const { lang, code, user_input} = req.body;
+    console.log(code);
+    if(code === undefined){
+        return res.json({message: "Empty code body"});
+    }
+
+    try {
+        const filePath = await generateFile(lang, code);
+        var output;
+        if(lang == 'cpp'){
+            output = await executeCpp(filePath,user_input);
+        }
+        if(lang == 'python'){
+            output = await executePython(filePath, user_input);
+        }
+    
+    return res.json({filePath, output});
 
     } catch(err){
         return res.json({message: err.message})

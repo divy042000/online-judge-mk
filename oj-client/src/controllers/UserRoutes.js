@@ -1,19 +1,7 @@
 const base = "http://localhost:5000";
 
-export const get_all_problems = async(obj) => {
-    const res = await fetch(`${base}/problems/all`, {
-        method: 'GET',
-        body: JSON.stringify(obj),
-        headers: {
-            "Content-Type" : "application/json",
-        },
-    });
-    const ans = await res.json();
-    return ans;
-}
-
-export const get_problem_by_id = async(obj) => {
-    const res = await fetch(`${base}/problems/get_prob_by_id`, {
+export const register_user = async(obj) => {
+    const res = await fetch(`${base}/user/signup`, {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
@@ -24,8 +12,8 @@ export const get_problem_by_id = async(obj) => {
     return ans;
 }
 
-export const run_compiler = async(obj) => {
-    const res = await fetch(`${base}/problems/run`, {
+export const login_user = async(obj) => {
+    const res = await fetch(`${base}/user/login`, {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
@@ -36,8 +24,8 @@ export const run_compiler = async(obj) => {
     return ans;
 }
 
-export const submit_compiler = async(obj) => {
-    const res = await fetch(`${base}/problems/submit`, {
+export const auth_user = async(obj) => {
+    const res = await fetch(`${base}/user/auth`, {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
@@ -48,8 +36,8 @@ export const submit_compiler = async(obj) => {
     return ans;
 }
 
-export const all_submissions = async(obj) => {
-    const res = await fetch(`${base}/problems/run`, {
+export const get_user_by_id = async(obj) => {
+    const res = await fetch(`${base}/user/get_user_by_id`, {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {

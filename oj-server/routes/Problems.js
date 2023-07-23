@@ -4,6 +4,7 @@ const {generateFile} = require('../utils/generateFile');
 const {executeCpp, executePython} = require('../utils/executeCpp');
 
 const ProblemsSchema = require("../models/ProblemsSchema");
+const SubmissionSchema = require("../models/SubmissionSchema");
 
 router.post('/addprob', async (req, res) => {
     try {
@@ -66,7 +67,7 @@ router.post('/get_prob_by_id', async(req, res) => {
 })
 
 router.post('/submit', async(req, res) => {
-    const { lang, code, probid} = req.body;
+    const { lang, code, probid, user_id} = req.body;
     console.log(code);
     const problem = await ProblemsSchema.findById(probid);
     if(code === undefined){
@@ -75,6 +76,7 @@ router.post('/submit', async(req, res) => {
 
     try {
         const filePath = await generateFile(lang, code);
+        console.log(filePath);
         var output;
         const results = [];
         for(const testcase of problem.testCases){
@@ -95,7 +97,15 @@ router.post('/submit', async(req, res) => {
             }
             
         }
-        console.log(results);
+
+        const submission = new SubmissionSchema({
+            user_id: user_id,
+            problem_name: problem.name,
+            verdict: results.every((res)=> res.isCorrect)
+        })
+        await submission.save();
+
+        // console.log(results);
     
     return res.json({filePath, output, results});
 

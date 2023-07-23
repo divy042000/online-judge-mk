@@ -10,7 +10,7 @@ if(!fs.existsSync(outputPath)){
 }
 
 const executeCpp = (filepath, user_input) => {
-    const jobId = path.basename(filepath).split(".")[0]; 
+    const jobId = 'temp'; 
     const outPath = path.join(outputPath, `${jobId}.out`)
     const inputFilePath = path.join(outputPath, 'input.txt');
     console.log(outPath)
@@ -19,6 +19,9 @@ const executeCpp = (filepath, user_input) => {
     // return outPath;
 
     return new Promise((resolve, reject) => {
+        if (fs.existsSync(outPath)) {
+            fs.unlinkSync(outPath);
+          }
         exec(`g++ ${filepath} -o ${outPath}`, (err, stdout, stderr) => {
            
             if(err){

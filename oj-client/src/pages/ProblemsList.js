@@ -3,12 +3,14 @@ import Navbar from "../components/Navbar";
 import { get_all_problems } from "../controllers/ProblemRoutes";
 import { Link } from "react-router-dom";
 import { ThreeCircles } from "react-loader-spinner";
+import { auth_user, get_user_by_id } from "../controllers/UserRoutes";
 
 export default function ProblemsList() {
   const [problem, setProblem] = useState([]);
   const [loading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    
     get_all_problems().then((data) => {
       console.log(data.message);
       setProblem(data.message);

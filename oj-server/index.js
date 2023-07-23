@@ -8,6 +8,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const problemRoutes = require("./routes/Problems");
+const submissionRoutes = require("./routes/Submissions");
+const userRoutes = require("./routes/Users");
 
 try {
     mongoose.connect(process.env.MONGO_URI);
@@ -22,6 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use('/problems', problemRoutes);
+app.use('/submissions', submissionRoutes);
+app.use('/user', userRoutes);
+
 app.listen(PORT, ()=> {
     console.log("Listening on port " + `${PORT}`)
 })

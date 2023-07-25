@@ -1,0 +1,17 @@
+# services:
+#   frontend:
+#     build:
+#       context: ./docker-session
+#       dockerfile: Dockerfile
+      
+#     ports: "5000:5000"
+#     image: my-node-image:1.2.4
+
+    
+#   backend:
+#     build:
+#       context: ./docker-session
+#       dockerfile: Dockerfile
+
+#     ports: "5000:5000"
+#     image: my-node-image:1.2.4

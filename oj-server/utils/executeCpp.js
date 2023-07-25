@@ -9,55 +9,76 @@ if(!fs.existsSync(outputPath)){
     fs.mkdirSync(outputPath, {recursive: true});
 }
 
-const executeCpp = (filepath, user_input) => {
-    const jobId = 'temp'; 
-    const outPath = path.join(outputPath, `${jobId}.out`)
-    const inputFilePath = path.join(outputPath, 'input.txt');
-    console.log(outPath)
-    console.log(user_input)
-    fs.writeFileSync(inputFilePath,user_input);
-    // return outPath;
+// const executeCpp = (filepath, user_input) => {
+//     const jobId = 'temp'; 
+//     const outPath = path.join(outputPath, `${jobId}.out`)
+//     const inputFilePath = path.join(outputPath, 'input.txt');
+//     console.log(outPath)
+//     console.log(user_input)
+//     fs.writeFileSync(inputFilePath,user_input);
+//     // return outPath;
 
-    return new Promise((resolve, reject) => {
-        if (fs.existsSync(outPath)) {
-            fs.unlinkSync(outPath);
-          }
-        exec(`g++ ${filepath} -o ${outPath}`, (err, stdout, stderr) => {
+//     return new Promise((resolve, reject) => {
+//         if (fs.existsSync(outPath)) {
+//             fs.unlinkSync(outPath);
+//           }
+//         exec(`g++ ${filepath} -o ${outPath}`, (err, stdout, stderr) => {
            
-            if(err){
-                reject((err, stderr));
+//             if(err){
+//                 reject((err, stderr));
+//             } else {
+//                 exec(`cd ${outputPath} && ./${jobId}.out < input.txt`, (err, stdout, stderr) => {
+//                     // console.log("Yesssssss")
+//                     if(err){
+//                         // console.log(err);
+//                         reject((err, stderr));
+//                     }
+//                     else{
+//                         // console.log("Yesssssss")
+//                         resolve(stdout);
+//                     }
+//                 })
+//             }
+//         })
+//     })
+// }
+
+const executeCpp = (filepath, user_input, timeoutMillis = 3000) => {
+    const jobId = 'temp';
+    const outPath = path.join(outputPath, `${jobId}.out`);
+    const inputFilePath = path.join(outputPath, 'input.txt');
+  
+    fs.writeFileSync(inputFilePath, user_input);
+  
+    return new Promise((resolve, reject) => {
+      if (fs.existsSync(outPath)) {
+        fs.unlinkSync(outPath);
+      }
+  
+      const compileCommand = `g++ ${filepath} -o ${outPath}`;
+      const executeCommand = `timeout ${timeoutMillis / 1000}s ${outPath} < ${inputFilePath}`;
+  
+      exec(compileCommand, (err, stdout, stderr) => {
+        if (err) {
+          reject(err);
+        } else {
+          exec(executeCommand, (err, stdout, stderr) => {
+            if (err) {
+              if (err.code === 124) {
+                console.log(err.message); 
+                reject(new Error('Compilation timed out.'));
+              } else {
+                console.log(err.message);
+                reject(err);
+              }
             } else {
-                exec(`cd ${outputPath} && ./${jobId}.out < input.txt`, (err, stdout, stderr) => {
-                    // console.log("Yesssssss")
-                    if(err){
-                        // console.log(err);
-                        reject((err, stderr));
-                    }
-                    else{
-                        // console.log("Yesssssss")
-                        resolve(stdout);
-                    }
-                })
+              resolve(stdout);
             }
-        })
-    })
-   
-    // return new Promise((resolve, reject) => {
-    //     exec(`g++ ${filepath} -o ${outPath} && cd ${outputPath} ./${jobId}.out < input.txt`, (err, stdout, stderr) => {
-    //         if(err){
-    //             // console.log("Yess")
-    //             reject((err, stderr));
-    //         }
-    //         if(stderr){
-    //             // console.log("No")
-    //             reject(stderr);
-    //         }
-    //         resolve(stdout);
-    //     });
-    // })
-
-}
-
+          });
+        }
+      });
+    });
+  };
 // const executePython = (filepath) => {
 //     const jobId = path.basename(filepath).split(".")[0]; 
 //     console.log(jobId);

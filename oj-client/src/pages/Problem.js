@@ -22,15 +22,16 @@ export default function Problem() {
   const [runCode, setRunCode] = useState("");
   const [stateVerdict, setStateVerdict] = useState(false);
   const [outputVerdict, setOutputVerdict] = useState(false);
+  const [outputMessage, setOutputMessage] = useState("");
   const [userInput, setUserInput] = useState("");
   const [loading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [userId, setUserId] = useState("");
+  const [smallLoader, setSmallLoader] = useState(false);
   // console.log(code);
   const { id } = useParams();
   var valext = [cpp()];
-
 
   useEffect(() => {
     if (localStorage.getItem("user_token")) {
@@ -45,9 +46,8 @@ export default function Problem() {
               atob(localStorage.getItem("user_token").split(".")[1])
             ).id,
           };
-          console.log(obj, '#######');
+          console.log(obj, "#######");
           setUserId(obj.id);
-          
         } else {
           setIsUserLoggedIn(false);
         }
@@ -100,6 +100,7 @@ export default function Problem() {
     // }, 2000);
   };
 
+
   const handleSubmit = () => {
     setIsLoading(true);
     console.log("Yess", code);
@@ -107,27 +108,26 @@ export default function Problem() {
       lang: codeLang,
       code,
       probid: probIndex,
-      user_id: userId
+      user_id: userId,
     };
     console.log(payload);
 
     try {
       submit_compiler(payload).then((data) => {
-        console.log(data);
+        console.log(data, "hemlo");
         // setSubmitCode(data.output);
         console.log(data.results);
         setStateVerdict(true);
-        setOutputVerdict(data.results[0].isCorrect);
+        setOutputVerdict(data.results[data.results.length - 1].isCorrect);
+        setOutputMessage(data.results[data.results.length - 1].output);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
       });
 
-      // setIsLoading(false);
-      // outputRef.current.scrollIntoView({behaviour: 'smooth'});
     } catch (err) {
       console.log(err);
     }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
   };
 
   //   if(codeLang === 'cpp'){
@@ -162,6 +162,7 @@ export default function Problem() {
               innerCircleColor=""
               middleCircleColor=""
             />
+            <h1 className="m-3 p-2 text-gold text-2xl font-bold">Compiling your code..</h1>
           </div>
         </>
       ) : (
@@ -286,11 +287,19 @@ export default function Problem() {
                               <h1 className="text-3xl m-3 uppercase font-semibold">
                                 Verdict:
                               </h1>
-                              <div className="m-3 p-2 bg-gray-600 rounded-lg">
-                                <h3 className="text-xl font-monocode">
-                                  Wrong Answer
-                                </h3>
-                              </div>
+                              {
+                                <div className="m-3 p-2 bg-gray-600 rounded-lg">
+                                  {outputMessage === "Compilation timed out." ? (
+                                    <h3 className="text-xl font-monocode">
+                                      Time Limit Exceeded
+                                    </h3>
+                                  ) : (
+                                    <h3 className="text-xl font-monocode">
+                                      Wrong Answer
+                                    </h3>
+                                  )}
+                                </div>
+                              }
                             </>
                           )
                         ) : (

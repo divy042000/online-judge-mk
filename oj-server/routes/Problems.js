@@ -93,7 +93,7 @@ router.post('/submit', async(req, res) => {
 
             } catch(err){
                 console.log(err);
-                results.push({input, expectedOutput, output: 'Error', isCorrect: false});
+                results.push({input, expectedOutput, output: `${err.message}`, isCorrect: false});
             }
             
         }

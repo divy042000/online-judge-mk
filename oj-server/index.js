@@ -18,6 +18,10 @@ try {
     console.log(err);
 }
 
+const frontendURL = 'http://localhost:3000'; // Replace with your actual frontend URL
+app.use(cors({
+  origin: frontendURL,
+}));
 
 app.use(cors());
 app.use(express.json());

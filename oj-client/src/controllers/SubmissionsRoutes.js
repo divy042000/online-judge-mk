@@ -1,4 +1,4 @@
-const base = "http://localhost:5000";
+const base = "http://44.206.250.73:5000";
 
 export const get_all_submissions = async(obj) => {
     const res = await fetch(`${base}/submissions/all`, {

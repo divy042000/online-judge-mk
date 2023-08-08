@@ -75,7 +75,7 @@ router.post('/submit', async(req, res) => {
     }
 
     try {
-        const filePath = await generateFile(lang, code);
+        const filePath = await generateFile(lang, code); //temp.cpp
         console.log(filePath);
         var output;
         const results = [];
@@ -88,7 +88,9 @@ router.post('/submit', async(req, res) => {
                 if(lang == 'python'){
                     output = await executePython(filePath, input);
                 }
+                // console.log(output,'yess');
                 const isCorrect = output.trim() === expectedOutput.trim();
+                // console.log(isCorrect);
                 results.push({input, expectedOutput, output, isCorrect});
 
             } catch(err){

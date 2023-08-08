@@ -59,11 +59,11 @@ const SignUp = () => {
 
           <div className="signup">
             <form method="POST">
-              <label className="label" for="chk" aria-hidden="true">
+              <label className="label text-gold" for="chk" aria-hidden="true">
                 Sign up
               </label>
               <input
-                className="input"
+                className="input bg-[#FFD700]"
                 type="text"
                 name="txt"
                 placeholder="User name"
@@ -74,7 +74,7 @@ const SignUp = () => {
                 }}
               />
               <input
-                className="input"
+                className="input bg-[#FFD700]"
                 type="email"
                 name="email"
                 placeholder="Email"
@@ -88,7 +88,7 @@ const SignUp = () => {
              
 
               <input
-                className="input"
+                className="input bg-[#FFD700]"
                 type="password"
                 name="pswd"
                 placeholder="Password"
@@ -99,7 +99,7 @@ const SignUp = () => {
                 }}
               />
               <button
-                className="signup-btn"
+                className="signup-btn bg-[#FFD700] text-gray-700 hover:bg-[#fff1a4]"
                 value="Register"
                 onClick={handleChange}
               >
@@ -108,13 +108,13 @@ const SignUp = () => {
             </form>
           </div>
 
-          <div className="login">
+          <div className="login bg-[#FFD700]">
             <form>
-              <label className="label" for="chk" aria-hidden="true">
+              <label className="label text-gray-700" for="chk" aria-hidden="true">
                 Login
               </label>
               <input
-                className="input"
+                className="input bg-gray-700 text-gold"
                 type="email"
                 name="email"
                 placeholder="Email"
@@ -125,7 +125,7 @@ const SignUp = () => {
                 required=""
               />
               <input
-                className="input"
+                className="input bg-gray-700 text-gold"
                 type="password"
                 name="pswd"
                 placeholder="Password"
@@ -133,7 +133,7 @@ const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required=""
               />
-              <button className="signup-btn" onClick={login_handleChange}>
+              <button className="signup-btn bg-gray-700 hover:bg-gray-600 text-gold" onClick={login_handleChange}>
                 Login
               </button>
             </form>

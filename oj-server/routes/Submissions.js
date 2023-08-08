@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/all', async(req, res) => {
     try {
-        const submissions = await SubmissionSchema.find();
+        const submissions = await SubmissionSchema.find().sort({ submission_time: -1 });
         return res.json({message: submissions})
     } catch(err){
         return res.json({Error: err});

@@ -76,9 +76,7 @@ export default function Navbar() {
                 <li className="text-gold hover:text-indigo-200 font-medium">
                   <Link to="/submissions">Submissions</Link>
                 </li>
-                <li className="text-gold hover:text-indigo-200 font-medium">
-                  <Link to="/about">About Us</Link>
-                </li>
+
                 
                 {localStorage.getItem("user_token") ? <>
                 <li>

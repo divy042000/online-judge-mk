@@ -33,10 +33,13 @@ export default function Submissions({timeString}){
 
     const checkVerdict = (verdictval) => {
         if(verdictval === 'true'){
-            return "Accepted"
+            return <><div className=" rounded-lg text-center text-green-500">Accepted</div></>
+        }
+        else if(verdictval === 'Compilation timed out.'){
+          return "Time Limit Exceeded"
         }
         else{
-            return "Wrong Answer"
+            return <><div className="rounded-lg text-center text-red-500">Wrong Answer</div></>
         }
     }
 

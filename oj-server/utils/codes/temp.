@@ -3,7 +3,5 @@ using namespace std;
 
 int main(){
   int n,m; cin>>n>>m;
-  while(true){
-    
-  }
+  cout<<n+m<<endl;
 }

@@ -77,7 +77,8 @@ export default function ProblemsList() {
                               </Link>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                              {prob.difficulty}
+                              {prob.difficulty == "Easy" ? (<><div className="rounded-xl text-center p-1 border-solid  text-green-400 border-green-600 border-[1px]">Easy</div></>): prob.difficulty == "Medium" ? (<><div className="rounded-xl text-center p-1 border-solid border-[1px] border-yellow-500 text-yellow-500">Medium</div></>) : (<><div className="rounded-xl text-center p-1 border-[1px] border-red-500 border-solid  text-red-500">Hard</div></>)}
+                              {/* {prob.difficulty} */}
                             </td>
                           </tr>
                         </tbody>

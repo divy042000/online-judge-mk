@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/signup', async(req, res) => {
     try {
         const {user_name, user_email, user_password} = req.body;
-
+        
         if(!user_name || !user_email || !user_password){
             throw new Error("Please fill all the fields");
         }

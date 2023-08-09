@@ -4,7 +4,6 @@
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/e79e553d-f6af-4940-b858-856b90e0e82b)
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/d91def2a-97e9-4e8f-b0fe-2930b457d049)
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/c988b9b9-e9f6-4a3e-a1ea-df049d07c91e)
-![image](https://github.com/mohittk/online-judge-mk/assets/79041510/dea2e35a-de17-4650-b015-12cda6452a5c)
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/dc4f9c21-f1c6-4200-a4b8-a64e05823403)
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/542219e2-edab-420f-b65a-4da665fab435)
 ![image](https://github.com/mohittk/online-judge-mk/assets/79041510/446c7628-69ed-4c63-8c20-f67c2a690cde)
